@@ -1,0 +1,2196 @@
+name: ALETHEIA
+tables:
+  - name: E_NEXUS_ADVERTISERS
+    base_table:
+      database: NEXUS_DATAPLATFORM
+      schema: EDS__ADVERTISERS__ALL
+      table: E_NEXUS_ADVERTISERS
+    dimensions:
+      - name: ACTIVITY_ID
+        synonyms:
+          - ACTIVITY_ID
+        description: |
+          ignore  this column
+        expr: ACTIVITY_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '11223488'
+          - '9250923'
+          - '14136538'
+      - name: ACTIVITY_NAME
+        synonyms:
+          - ACTIVITY_NAME
+        description: ACTIVITY_NAME is the descriptive label assigned to a specific campaign activity or task, such as an ad insertion, optimization action, or creative deployment. It provides a human-readable reference to identify and track campaign actions for reporting, monitoring, and performance analysis. This is a categorical attribute and should not be aggregated. When answering questions involving ACTIVITY_NAME, use it to filter, group, or display results, typically in combination with SF_CAMPAIGN_ID and day to ensure campaign-level and daily accuracy. As a non-additive field, it is intended for identification, segmentation, and reporting purposes rather than calculations.
+        expr: ACTIVITY_NAME
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - STP Category Shoes
+          - Amtrak_Tickets_ PurchaseConfirm_PrimaryPath
+          - FY25 HVA - Product Selector
+      - name: BILLABLE_RATE_TYPE
+        synonyms:
+          - billable_rate_category
+          - rate_type
+          - abc
+        description: |-
+          "This column defines the pricing model or billing metric used by the DSP (Demand-Side Platform) to charge for impressions, clicks, views, or actions.
+          It tells you how the advertiser is billed for the media activity (e.g., per thousand impressions, per click, per view, per engagement, or at a flat rate).
+
+          The values represent industry-standard buying models, with some DSP-specific variations:
+
+          Unique Values & Meanings:
+
+          CPM (Cost per Mille) → billed per 1,000 impressions.
+
+          dCPM (Dynamic CPM) → a dynamic version of CPM where the rate may fluctuate based on auction or targeting.
+
+          DCPx → DSP-specific variant of dynamic pricing, often an extension of dCPM.
+
+          CPV (Cost per View) → billed when a video view occurs.
+
+          dCPV (Dynamic CPV) → dynamic variation of CPV with auction-based pricing.
+
+          CPCV (Cost per Completed View) → billed only when a video ad is viewed fully.
+
+          CPE (Cost per Engagement) → billed when a user engages (e.g., clicks, hovers, expands).
+
+          CPA (Cost per Action) → billed when a conversion or predefined action occurs (e.g., purchase, signup).
+
+          Flat → a fixed/bundled fee, not dependent on impression or action volume.
+
+          Free → reported as no cost charged (e.g., test or bonus media).
+
+          How users may refer to it in natural language:
+
+          “billing model”
+
+          “buying model”
+
+          “pricing type”
+
+          “how we’re charged”
+
+          “what’s the cost basis”
+
+          “payment model”
+
+          “rate type”
+
+          “spend model”
+
+          When to use it in queries:
+
+          If the user asks: “What billing model was used for this campaign?” → return BILLABLE_RATE_TYPE.
+
+          If the user asks: “Are we paying on CPM or CPCV?” → check this column.
+
+          If the user asks: “Show me spend by billing model” → group by BILLABLE_RATE_TYPE and sum total_media_cost.
+
+          If the user asks: “Which campaigns are on CPA vs CPM?” → filter this column accordingly.
+
+          Agent guidance:
+
+          Treat BILLABLE_RATE_TYPE as the charging method that explains the basis of total_media_cost.
+
+          Map user-friendly words like “billing model”, “pricing type”, “how are we charged”, or “buying model” to this field.
+
+          Use it for breakdowns, comparisons, or filtering, not for spend itself (spend comes from total_media_cost).
+
+          Remember that “Flat” and “Free” are exceptions where spend may not scale linearly with impressions or actions."
+        expr: BILLABLE_RATE_TYPE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - CPM
+          - DCPx
+      - name: BUYING_MODEL
+        synonyms:
+          - procurement_method
+          - purchasing_model
+          - acquisition_strategy
+          - buying_strategy
+          - media_buying_model
+        description: |-
+          "This column defines the commercial arrangement or financial structure under which media is purchased from the DSP or vendor.
+          It explains how fees, margins, or value-adds are applied to the media cost, and whether the cost structure is disclosed or bundled.
+
+          Unique Values & Meanings:
+
+          Added Value → Media provided as bonus inventory at no extra charge, often part of a larger deal (e.g., free impressions).
+
+          Fee → A fixed or percentage-based fee is applied separately to the media cost.
+
+          All-Inclusive → The reported media cost includes all associated fees/margins (bundled pricing).
+
+          Disclosed → The fees and margins are transparent to the advertiser, clearly itemized.
+
+          Non-Disclosed Margin → Fees or margins are hidden within the media cost and not explicitly reported.
+
+          How users may refer to it in natural language:
+
+          “buying arrangement”
+
+          “commercial model”
+
+          “deal type”
+
+          “contract type”
+
+          “pricing transparency”
+
+          “are fees included or separate?”
+
+          “is this disclosed or non-disclosed?”
+
+          “is this all-in?”
+
+          “is this added value?”
+
+          When to use it in queries:
+
+          If the user asks: “What buying model was used for this campaign?” → return BUYING_MODEL.
+
+          If the user asks: “Show me spend by deal type” → group by BUYING_MODEL and sum total_media_cost.
+
+          If the user asks: “Which campaigns are non-disclosed vs disclosed?” → filter on BUYING_MODEL.
+
+          If the user asks: “How much of the spend was all-inclusive?” → filter BUYING_MODEL = All-Inclusive.
+
+          If the user asks: “Do we have added value in this DSP?” → check for BUYING_MODEL = Added Value.
+
+          Agent guidance:
+
+          Treat BUYING_MODEL as the contractual / commercial pricing structure, not the actual spend (which comes from total_media_cost).
+
+          Map natural user terms like “deal type”, “all-in”, “fees disclosed”, “hidden margin”, or “added value” to this column.
+
+          Always use this field for understanding or segmenting spend by transparency or commercial setup."
+        expr: BUYING_MODEL
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Added Value
+          - Non-Disclosed Margin
+      - name: CAMPAIGN_ID
+        synonyms:
+          - ad_campaign_id
+          - campaign_identifier
+          - marketing_campaign_id
+          - promo_id
+          - advertising_campaign_id
+          - campaign_code
+        description: CAMPAIGN_ID is the unique identifier assigned to each advertising campaign. It serves as the primary business key to distinguish one campaign from another across all reporting and analytics. This is a categorical attribute and should not be aggregated. When answering questions involving CAMPAIGN_ID, use it to group, filter, or join campaign-related metrics such as impressions, billable_rate, and video_plays. At the daily level, CAMPAIGN_ID should always be considered in combination with the day column to ensure campaign-level daily accuracy. As a non-additive field, it is used exclusively for identification, segmentation, and campaign-level reporting
+        expr: CAMPAIGN_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '33588793'
+          - '32280822'
+          - '33602984'
+      - name: CAMPAIGN_NAME
+        synonyms:
+          - ad_campaign
+          - marketing_campaign
+          - promotional_campaign
+          - advertising_campaign
+          - campaign_title
+        description: CAMPAIGN_NAME is the descriptive label assigned to each advertising campaign, typically used for reporting, monitoring, and user-friendly identification. Unlike CAMPAIGN_ID, which is a unique system identifier, CAMPAIGN_NAME provides a readable reference for business stakeholders. This is a categorical attribute and should not be aggregated. When answering questions involving CAMPAIGN_NAME,  or CAMPAIGN, use it to display or filter results, or to provide context in campaign-level summaries. At the daily level,As a non-additive field, it is intended for reporting and interpretability rather than calculations.
+        expr: CAMPAIGN_NAME
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 2025|FY|IBM|Programmatic||NA|BTD|DCOV2|4700972298||USA
+          - TCF_FY24_BackToSchool_BTS_NEXUS_Display_NA
+          - 2025_Full Year_AARP_ECP_Nationwide_Digital
+      - name: CREATIVE_ID
+        synonyms:
+          - ad_id
+          - ad_identifier
+          - creative_asset_id
+          - ad_unit_id
+          - media_id
+          - content_id
+          - asset_id
+        description: CREATIVE_ID is the unique identifier assigned to each creative asset within a campaign. It is used to track performance, reporting, and attribution at the creative level. This is a categorical attribute and should not be aggregated. When answering questions involving CREATIVE_ID, use it to filter, group, or break down metrics (e.g., impressions, video_plays) at the creative granularity. At the daily level, CREATIVE_ID should be considered in combination with CAMPAIGN_ID (or SF_campaign_id) and day to ensure accuracy. As a non-additive field, it is strictly for identification and segmentation, not for calculations.
+        expr: CREATIVE_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '236869708'
+          - '232292148'
+          - '229077441'
+      - name: CREATIVE_NAME
+        synonyms:
+          - ad_name
+          - ad_title
+          - ad_description
+          - creative_title
+          - ad_content_name
+          - ad_asset_name
+          - media_name
+          - campaign_asset
+          - ad_element_name
+        description: |-
+          "This column represents the name or identifier of the ad creative used in a campaign.
+          A creative refers to the actual ad asset — such as a banner, video, native ad, or audio file — that was trafficked and served to users.
+          CREATIVE_NAME is typically assigned in the DSP or ad server during campaign setup and can include descriptive text, naming conventions, or unique IDs.
+
+          It allows users to identify which creative delivered impressions, clicks, views, or spend within a campaign.
+
+          How users may refer to it in natural language:
+
+          “creative name”
+
+          “ad name”
+
+          “asset name”
+
+          “banner name”
+
+          “video creative”
+
+          “which ad was shown”
+
+          “specific ad”
+
+          When to use it in queries:
+
+          If the user asks: “Which creative had the highest clicks?” → group by CREATIVE_NAME and sum CLICKS.
+
+          If the user asks: “Show performance by creative” → group by CREATIVE_NAME and return impressions, clicks, spend, etc.
+
+          If the user asks: “What is the CTR of each creative?” → calculate (CLICKS ÷ IMPRESSIONS) grouped by CREATIVE_NAME.
+
+          If the user asks: “Which creative performed best in video views?” → group by CREATIVE_NAME and return VIDEO_VIEWS.
+
+          Agent guidance:
+
+          Treat CREATIVE_NAME as the label for the individual ad asset.
+
+          Always map user terms like “ad name”, “asset name”, or “banner” to this column.
+
+          When analyzing performance, combine CREATIVE_NAME with metrics such as IMPRESSIONS, CLICKS, VIDEO_VIEWS, TOTAL_MEDIA_COST.
+
+          Be mindful that CREATIVE_NAME may not always be standardized (naming conventions may differ by DSP, advertiser, or trafficking team). Use LIKE %...% and LOWER() if user input does not exactly match the stored creative name."
+        expr: CREATIVE_NAME
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - TripleLift:CRO_SeemorecontrolmoreWithAIpoweredautomationyoucan_Gainobservability_BKX_NON_nibmdco2025brandc_N_20APO
+          - DCO2023:Bnd_AIFOMO72ofCAIOssaybusinessesriskfallingbehindwithoutAIimpactmea_Learnmore_GZQ_NON_bDCO2023IBVWeekly_S_10A00
+          - SNP_GB_US_BoF2_ENG_Static_Banner_NA_728x90_NA
+      - name: DATA_TACTIC
+        synonyms:
+          - DATA_TACTIC
+        description: ignore this column
+        expr: DATA_TACTIC
+        data_type: VARCHAR(16777216)
+      - name: DATASOURCE
+        synonyms:
+          - data_source
+          - data_provider
+          - data_supplier
+        description: |-
+          This column identifies the platform or source system from which the data was ingested.
+          It reflects whether the data comes from a DSP (Demand-Side Platform), an ad server, or a measurement/verification provider.
+          It is used to distinguish data streams and enable reporting by platform of origin.
+
+          Examples of values & meanings:
+
+          DSPs (media buying platforms): Sizmek, Xandr, TTD (The Trade Desk), Quantcast, Amazon, DV360_Standard, DV360_Youtube, Yahoo, Viant, Zeta.
+
+          Ad Servers: DCM (Google Campaign Manager 360).
+
+          Measurement / Verification vendors: DoubleVerify, IAS (Integral Ad Science).
+
+          How users may refer to it in natural language:
+
+          “data source”
+
+          “platform”
+
+          “which DSP”
+
+          “ad server”
+
+          “where the data comes from”
+
+          “reporting source”
+
+          “vendor”
+
+          When to use it in queries:
+
+          If the user asks: “Show me spend by DSP” → group by DATASOURCE and sum TOTAL_MEDIA_COST.
+
+          If the user asks: “Filter data only from Campaign Manager 360” → filter DATASOURCE = 'DCM'.
+
+          If the user asks: “Compare YouTube vs Standard DV360 data” → use DATASOURCE values DV360_Youtube and DV360_Standard.
+
+          If the user asks: “Show viewability metrics from verification vendors” → filter DATASOURCE = IAS or DoubleVerify.
+
+          Agent guidance:
+
+          Treat DATASOURCE as the origin platform for the reported data.
+
+          Map user-friendly terms like “DSP”, “ad server”, “verification vendor”, or specific platform names (“Google Campaign Manager”, “The Trade Desk”, “DV360”) to this field.
+
+          Recognize that some platforms may appear under abbreviations:
+
+          TTD → The Trade Desk
+
+          DCM → Google Campaign Manager 360
+
+          IAS → Integral Ad Science
+
+          If the user input doesn’t exactly match the stored value, normalize by lowercasing and using LIKE %...% for flexible matching.
+        expr: DATASOURCE
+        data_type: VARCHAR(14)
+        sample_values:
+          - DCM
+          - TTD
+          - Sizmek
+          - Dv360_Youtube
+          - Dv360_Standard
+      - name: DEVICE_TYPE
+        synonyms:
+          - device_category
+          - hardware_type
+          - equipment_class
+          - gadget_type
+          - machine_type
+          - instrument_type
+        description: ignore this column
+        expr: DEVICE_TYPE
+        data_type: VARCHAR(16777216)
+      - name: FINAL_XAXIS_CODE
+        synonyms:
+          - FINAL_XAXIS_CODE
+        description: |
+          ignore this column
+        expr: FINAL_XAXIS_CODE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - P2VR715
+          - P2ZVWJ6
+          - P2QYRTR
+      - name: MBK
+        synonyms:
+          - MBK
+        description: |
+          ignore this column
+        expr: MBK
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '383127055'
+          - '407427167'
+          - '393567229'
+      - name: MBN
+        synonyms:
+          - media_buying_network
+          - media_buyer_name
+          - media_buyer_id
+          - media_buyer_code
+          - media_buyer_reference
+        description: List of unique advertiser names and their corresponding ad campaigns, including details such as product, location, language, target audience, and ad format.
+        expr: MBN
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - P30C2RW_D2Z_COP_239_OLV_GM NEXUS MEDIA_Package - TWO_SHR_NON_VID_OV_COR_DE_Denny's Q1-Q4 - Shreveport OLV English_Run of Network_Demo_P18-54_Standard_NV_NA
+          - R2SF2YR_202403.1686_CPM_Ikea B2B FY24_STANBAN_CPLP_Jun24-Aug24_XRTB_CR2L6K3_(P2RZ4NW)_NC
+          - P2ZHS8P_D2Z_COP_228_Audience_GM NEXUS MEDIA_Package - ONE_PHO_NON_DIS_SDP_COR_DE_Denny's Q1-Q4 - Phoenix Display English_Fixed Placement_Behavioral_P25-54_Standard_NV_NA
+      - name: MEDIA_CODE
+        synonyms:
+          - MEDIA_CODE
+        description: |
+          ignore this column
+        expr: MEDIA_CODE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Display
+      - name: MEDIA_TYPE
+        synonyms:
+          - MEDIA_TYPE
+        description: Ignore this column, it is always NULL
+        expr: MEDIA_TYPE
+        data_type: VARCHAR(16777216)
+      - name: OPPORTUNITY_NAME
+        synonyms:
+          - opportunity_title
+          - sales_opportunity
+          - business_opportunity
+          - prospect_name
+          - potential_deal
+          - sales_lead
+          - business_chance
+          - new_business_opportunity
+          - potential_sale
+        description: OPPORTUNITY_NAME is the descriptive label assigned to a specific sales or advertising opportunity within a campaign. It provides a human-readable reference to identify and track the opportunity for reporting, performance analysis, and business insights. This is a categorical attribute and should not be aggregated. When answering questions involving OPPORTUNITY_NAME, use it to filter, group, or display results, typically in combination with SF_campaign_id and day to maintain campaign-level and daily accuracy. As a non-additive field, it is intended for identification, segmentation, and reporting purposes rather than calculations.
+        expr: OPPORTUNITY_NAME
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Mindshare (NYC) - US - Mindshare - IBM Pro Brand Demand APAC
+          - XAX - EssenceMediacom New York - USA - The Cheesecake Factory - Monthly OLO Campaign - (Q1-Q4 2024)
+          - AmtrakEvergreen2025|Acela_ACE_DIS_C+C_N/A_Q125_Q425_NA-CP2PP90-CR2ST32
+      - name: OUT_OF_DELIVERY
+        synonyms:
+          - “out of delivery impressions”  “impressions outside campaign dates”  “delivery out of flight”  “served outside contract period”  “out-of-flight delivery”  “ads served outside planned dates”
+        description: |-
+          This column represents the number of impressions delivered outside the planned flight dates of a Salesforce campaign (SF_CAMPAIGN).
+          In other words, it captures delivery that occurred before the campaign start date or after the campaign end date, as defined in Salesforce.
+
+          These impressions are technically delivered but fall outside the contracted delivery window, and may require adjustment, reconciliation, or investigation.
+
+          How users may refer to it in natural language:
+
+          “out of delivery impressions”
+
+          “impressions outside campaign dates”
+
+          “delivery out of flight”
+
+          “served outside contract period”
+
+          “out-of-flight delivery”
+
+          “ads served outside planned dates”
+
+          When to use it in queries:
+
+          If the user asks: “Show me impressions served outside campaign dates” → return OUT_OF_DELIVERY.
+
+          If the user asks: “Which campaigns had out-of-flight delivery?” → filter where OUT_OF_DELIVERY > 0.
+
+          If the user asks: “What percentage of delivery was out of flight?” → calculate OUT_OF_DELIVERY ÷ IMPRESSIONS.
+
+          If the user asks: “Did we overdeliver outside the IO period?” → use this column as the indicator.
+
+          Agent guidance:
+
+          Treat OUT_OF_DELIVERY as the quality/control metric for campaign delivery vs booked dates.
+
+          Always map user-friendly terms like “out-of-flight”, “outside campaign dates”, or “delivery outside planned window” to this column.
+
+          Use it alongside IMPRESSIONS to assess how much of the total delivery was outside the contracted period.
+
+          This is not billable volume unless specifically agreed — billing is usually tied to delivery within the IO dates.
+        expr: OUT_OF_DELIVERY
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 'No'
+          - Unmapped
+      - name: P_CODE
+        description: it represents a package level/granularity in DCM (campaign manager 360 data)
+        expr: P_CODE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - P33T1FM
+          - P30HZBR
+          - P30J2RG
+      - name: PACKAGE
+        synonyms:
+          - “package”  “media package”  “buying package”  “deal package”  “campaign package”  “partner package”
+        description: |-
+          This column represents a media buying package, which is a campaign-level construct used when purchasing media from a partner (such as a DSP or an MVPD partner like DirecTV, Comcast, or Dish).
+          Each package is treated as a distinct media buy with its own budget, booked/planned units (e.g., impressions), and associated delivery.
+
+          Packages are often used to organize spend and delivery across different suppliers or buying arrangements within a broader advertiser campaign.
+
+          How users may refer to it in natural language:
+
+          “package”
+
+          “media package”
+
+          “buying package”
+
+          “deal package”
+
+          “campaign package”
+
+          “partner package”
+
+          When to use it in queries:
+
+          If the user asks: “What is the budget of this package?” → return the BUDGET at the PACKAGE level.
+
+          If the user asks: “How many impressions were planned vs delivered for package X?” → compare PLANNED_UNITS vs IMPRESSIONS, grouped by PACKAGE.
+
+          If the user asks: “Show me spend by package” → group by PACKAGE and sum TOTAL_MEDIA_COST (agency spend) or UNCAPPED_SPEND (advertiser spend).
+
+          If the user asks: “Which packages ran under DirecTV?” → filter by SUPPLIER_NAME = 'DIRECTV LLC' and group by PACKAGE.
+
+          Agent guidance:
+
+          Treat PACKAGE as the buying container that groups budget, planned units, and delivery for a specific partner buy.
+
+          Always map user terms like “buying package” or “partner package” to this column.
+
+          Use it as a grouping dimension for reporting spend, budget, and delivery at the package level.
+
+          Remember:
+
+          PACKAGE has its own budget and planned units.
+
+          A campaign may have multiple packages (e.g., one with a DSP, another with an MVPD).
+
+          Packages allow reporting at a more granular buying level than the overall campaign.
+        expr: PACKAGE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - TheTradeDesk|IN|FSMIN|DCO India Banking Q1|Engagement|BDM|General|General|OPX|Programmatic|Banner|DesktopMobileTablet|PACKAGE|Cash
+          - P2KV385_ABT_ENS_070_Audience_GM NEXUS MEDIA_Xaxis_Standard_Consideration_Conditional_IQVIA_Non-User Category PACKAGE_Run of Network_Behavioral_P35+_Standard_NV_NA
+          - P3471QW_JRZ_CCP_543_Audience_GM NEXUS MEDIA_CW_DP_DB_NO_MP_ID_RC_BT_NO_1D_PO_JD_ US | Tech Pulse | Tier 2 | Standard Display | Banner PACKAGE_Run of Channel_Behavioral_P18+_Standard_NV_NA
+      - name: PRODUCT_CODE
+        synonyms:
+          - product_id
+          - item_code
+          - sku
+          - product_identifier
+          - item_number
+          - stock_code
+        description: |-
+          "This column represents the media type / channel classification of a campaign, placement, or buyline.
+          Values in this column describe whether the activity belongs to Advanced TV (ATV), Display, Video, Audio, Cross-Channel, Commerce, Native, DOOH, External, or Integrated solutions.
+
+          Because values come from multiple external systems and naming conventions, there are several variations for the same media type (e.g., “Connected TV”, “Advanced TV”, “Advanced TV – Advanced TV” all mean ATV). The agent should not rely only on exact matches, but instead group values into their normalized media type when answering queries.
+
+          How to use it in queries:
+
+          Advanced TV (ATV) → include “Connected TV”, “Advanced TV”, “Advanced TV – Advanced TV”.
+
+          Video → include “Video”, “Integrated Video”, “Integrated Video – YouTube”, “Video (OLV, YT, CTV, Other)”, “Integrated Video – Pre-roll”.
+
+          Display → include “Display”, “Integrated Display”, “Integrated Display – Mobile”, “Integrated Display – DCO”, “Integrated Display – Integrated Display”.
+
+          Audio → include “Audio”, “Integrated Audio”, “Integrated Audio – Integrated Audio”.
+
+          Cross-Channel → include “Integrated Cross Channel”, “Integrated Cross Channel – Integrated Cross Channel”.
+
+          DOOH → include “Advanced DOOH”, “Advanced DOOH – Advanced DOOH”.
+
+          Commerce → include “Integrated Commerce – Commerce Amazon”.
+
+          Native → include “Native”.
+
+          External / Partner buys → include “External”, “External – External Partner”.
+
+          Integrated solutions (general) → if the user requests Integrated solutions, include everything with “Integrated” in the value (Integrated Video, Integrated Display, Integrated Audio, Integrated Cross Channel, Integrated Commerce, etc.).
+
+          Agent guidance:
+
+          Treat product_code as a categorical label for media channel, but normalize by grouping semantically similar variants.
+
+          If the query specifies a high-level media type, map it to all its variants in this field.
+
+          If the query specifies Integrated solutions, automatically include all product_code values containing “Integrated”.
+
+          Always anticipate that new variations may appear; use keyword/substring matching rather than exact equality."
+        expr: PRODUCT_CODE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Integrated Display - Display
+          - Integrated Video
+          - Integrated Display
+      - name: R_CODE
+        description: this is another identifier that reprsents a package and it is mainly used to build the data by joining salesforce data with DSPs data
+        expr: R_CODE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - R31L94H
+          - R2MVS14
+          - R366FK0
+      - name: SF_ADVERTISER
+        synonyms:
+          - advertiser_name
+          - advertiser_id
+          - sf_advertiser_id
+          - advertiser_code
+          - advertiser_identifier
+          - sf_advertiser_code
+          - advertiser_key
+        description: |-
+          This column represents the advertiser’s name as recorded in Salesforce (SF) or the integrated CRM system.
+          It identifies the brand, company, or client that owns the campaigns, placements, and associated spend.
+
+          This is the primary dimension for reporting at the advertiser level, allowing users to filter, group, and analyze performance by client.
+
+          How users may refer to it in natural language:
+
+          “advertiser”
+
+          “brand”
+
+          “client”
+
+          “company name”
+
+          “who is the advertiser”
+
+          “advertiser name”
+
+          “which brand ran this campaign”
+
+          When to use it in queries:
+
+          If the user asks: “Show me spend by advertiser” → group by SF_ADVERTISER and sum TOTAL_MEDIA_COST.
+
+          If the user asks: “Which advertisers had the most impressions?” → group by SF_ADVERTISER and sum IMPRESSIONS.
+
+          If the user asks: “List campaigns by brand X” → filter LOWER(SF_ADVERTISER) LIKE '%brand x%'.
+
+          If the user asks: “How many clicks did advertiser Y generate?” → filter by advertiser and sum CLICKS.
+
+          Agent guidance:
+
+          Treat SF_ADVERTISER as the advertiser name / client name dimension.
+
+          Map user-friendly terms like “brand” or “client” to this column.
+
+          Users may not type the exact stored string — always normalize by lowercasing and using LIKE %...% for matching:
+
+          WHERE LOWER(sf_advertiser) LIKE '%nike%'
+
+
+          If there are multiple spellings/aliases for the same advertiser, aggregate them under SF_ADVERTISER.
+        expr: SF_ADVERTISER
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - The Cheesecake Factory
+          - INEOS Grenadier - US
+          - PVH - US
+      - name: SF_CAMPAIGN_ID
+        synonyms:
+          - salesforce_campaign_identifier
+          - sf_campaign_code
+          - campaign_id_sf
+          - salesforce_campaign_code
+          - sf_campaign_key
+        description: |-
+          Description:
+          This column represents the unique Salesforce campaign identifier, used to tie delivery, spend, and planning data back to a specific campaign slice.
+
+          Each SF_CAMPAIGN_ID is derived from an R-code + Year + Month.
+
+          An R-code can run for multiple months, and for each month, a separate SF_CAMPAIGN_ID is created.
+
+          Example: If R-code R123ABC runs for 12 months, it will generate 12 different SF_CAMPAIGN_IDs (one per month).
+
+          This means an SF_CAMPAIGN_ID corresponds to a monthly slice of an R-code’s lifecycle and is the primary key for linking campaign-level attributes like BUDGET, START_DATE, END_DATE, and IO_DAYS.
+
+          How users may refer to it in natural language:
+
+          “Salesforce campaign ID”
+
+          “campaign ID”
+
+          “monthly campaign ID”
+
+          “campaign identifier”
+
+          “the ID for the campaign month”
+
+          When to use it in queries:
+
+          If the user asks: “Which campaign does this data belong to?” → use SF_CAMPAIGN_ID.
+
+          If the user asks: “Group spend by campaign” → group by SF_CAMPAIGN_ID and sum TOTAL_MEDIA_COST or UNCAPPED_SPEND.
+
+          If the user asks: “How many campaigns did R-code X run?” → count distinct SF_CAMPAIGN_IDs for that R_CODE.
+
+          If the user asks: “Show pacing vs budget by campaign” → use SF_CAMPAIGN_ID to join BUDGET with spend metrics.
+
+          Agent guidance:
+
+          Treat SF_CAMPAIGN_ID as the canonical key for campaign reporting at the monthly slice level.
+
+          Always clarify:
+
+          R_CODE = the booking reference (root deal).
+
+          SF_CAMPAIGN_ID = the month-specific campaign instance of that R-code.
+
+          Use it as the granular campaign identifier when aggregating, filtering, or joining campaign-related attributes.
+
+          Remember: many higher-level questions (e.g., total spend for an R-code across the year) require aggregating across multiple SF_CAMPAIGN_IDs.
+        expr: SF_CAMPAIGN_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - R35VD9B-2025-08
+          - R30YHV5-2025-08
+          - R366FJQ-2025-08
+      - name: SOURCE_TYPE
+        synonyms:
+          - data_source_type
+          - source_format
+          - data_origin
+          - information_source
+          - data_provenance
+        description: |-
+          This column indicates the origin type of the data or billing source, specifying whether the data was reported by an Ad Server (AS) or a Demand-Side Platform (DSP).
+
+          AS (Ad Server) → Data coming from the ad server, which is responsible for ad delivery tracking, counting impressions, clicks, conversions, and sometimes billing in specific models (e.g., CPCV via ad server).
+
+          DSP (Demand-Side Platform) → Data coming directly from the DSP, which manages bidding, buying, and billing against suppliers and exchanges.
+
+          SOURCE_TYPE is particularly important when calculating billable units (e.g., in PAYABLE_UNITS), since billing logic can differ depending on whether the record comes from an ad server or a DSP.
+
+          How users may refer to it in natural language:
+
+          “source type”
+
+          “reporting source”
+
+          “platform type”
+
+          “ad server vs DSP”
+
+          “where the data is coming from”
+
+          When to use it in queries:
+
+          If the user asks: “Show me which data comes from DSPs vs ad servers” → group by SOURCE_TYPE.
+
+          If the user asks: “How many impressions were reported by ad servers vs DSPs?” → sum IMPRESSIONS grouped by SOURCE_TYPE.
+
+          If the user asks: “How do we pay depending on the source?” → apply billing logic using SOURCE_TYPE (e.g., CPCV may depend on AS vs DSP).
+
+          Agent guidance:
+
+          Treat SOURCE_TYPE as the classification of the data origin (Ad Server vs DSP).
+
+          Always map user phrases like “ad server” or “DSP” to this field.
+
+          When handling billing or spend-related queries, ensure the logic respects SOURCE_TYPE — e.g., CPCV via ad server uses impressions, while CPCV via DSP uses completed views.
+
+          Use it in conjunction with BILLABLE_RATE_TYPE and metrics (IMPRESSIONS, VIDEO_VIEWS, VIDEO_FULLY_PLAYED) to determine payable units.
+        expr: SOURCE_TYPE
+        data_type: VARCHAR(3)
+        sample_values:
+          - AS
+          - DSP
+      - name: SPECIAL_PRODUCT
+        synonyms:
+          - custom_product
+          - premium_product
+          - unique_product
+          - exclusive_product
+          - specialty_product
+          - bespoke_product
+        description: ignore this column
+        expr: SPECIAL_PRODUCT
+        data_type: VARCHAR(16777216)
+      - name: SUPPLIER_NAME
+        synonyms:
+          - provider_name
+          - vendor_name
+          - partner_name
+          - supplier_company
+          - third_party_name
+          - external_provider
+          - external_supplier
+          - external_vendor
+        description: |-
+          "This column represents the supplier / media partner / DSP / publisher from which media inventory was purchased or delivered.
+          It identifies the external vendor or platform responsible for supplying the ad impressions, clicks, or spend.
+
+          Examples of values include:
+
+          DSPs / Ad Tech Platforms: The Trade Desk Inc, Xandr Inc (AppNexus), Viant Inc, Quantcast, Criteo, Yahoo Ad Tech, Zeta Interactive, Media IQ Digital NA, Deep Intent.
+
+          Publishers / Media Owners: Netflix, Spectrum Reach, Comcast Advertising, DirecTV LLC, Dish Network, Jungroup.com.
+
+          Retail / Walled Gardens: Amazon Ads (Sizmek), Amazon.com, Google Inc.
+
+          Agency Trading Desks: Xaxis Canada.
+
+          How users may refer to it in natural language:
+
+          “supplier”
+
+          “vendor”
+
+          “media partner”
+
+          “platform”
+
+          “DSP”
+
+          “publisher”
+
+          “who delivered the ads”
+
+          When to use it in queries:
+
+          If the user asks: “Show me spend by supplier” → group by SUPPLIER_NAME and sum TOTAL_MEDIA_COST.
+
+          If the user asks: “How much did we spend with The Trade Desk?” → filter where SUPPLIER_NAME contains ""The Trade Desk"".
+
+          If the user asks: “Which campaigns ran on Netflix?” → filter where SUPPLIER_NAME contains ""Netflix"".
+
+          If the user asks: “Breakdown by DSP vs Publisher” → segment using values in this column.
+
+          Agent guidance:
+
+          Treat SUPPLIER_NAME as the source of media inventory.
+
+          Recognize that users may not type the exact string (e.g., “TTD” instead of “The Trade Desk Inc”).
+
+          Always normalize for matching:
+
+          lowercase both the column and the user input
+
+          use wildcard search (LIKE %...%) instead of exact match
+
+          WHERE LOWER(supplier_name) LIKE '%the trade desk%'
+
+
+          Anticipate abbreviations or nicknames:
+
+          “TTD” → The Trade Desk
+
+          “Xandr” → Xandr Inc (AppNexus)
+
+          “Amazon Ads” → Amazon Ads (Sizmek) or Amazon.com"
+        expr: SUPPLIER_NAME
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - QUANTCAST
+          - THE TRADE DESK INC
+          - AMAZON.COM
+    time_dimensions:
+      - name: DAY
+        synonyms:
+          - date
+          - calendar_day
+          - daily_date
+          - day_of_week
+          - day_of_month
+          - calendar_date
+        description: Day represents the calendar date associated with the campaign activity or metric record (e.g., impressions, video plays, billable rate). It is a key attribute used to organize and aggregate data on a daily basis. This column should not be aggregated, as it is a date identifier rather than a metric. When answering questions involving time or trends, use day as the grouping dimension to roll up measures (such as impressions or video_plays) or to filter results for a specific date or range. day must always be used in combination with SF_campaign_id to ensure campaign-level daily accuracy
+        expr: DAY
+        data_type: DATE
+        sample_values:
+          - '2025-04-18'
+          - '2025-07-14'
+          - '2025-06-13'
+      - name: END_DATE
+        synonyms:
+          - expiration_date
+          - end_time
+          - completion_date
+          - termination_date
+          - closing_date
+          - finish_date
+          - last_date
+        description: |-
+          "This column represents the end date of a Salesforce campaign (SF_CAMPAIGN_ID).
+          Each SF_CAMPAIGN_ID corresponds to a specific R-code (the booking code) and reflects a monthly slice of that R-code’s lifecycle.
+
+          If an R-code runs for 12 months, it will generate 12 different SF_CAMPAIGN_IDs, each covering one month.
+
+          Each SF_CAMPAIGN_ID has a start date (START_DATE, the first day of the month) and an end date (END_DATE, the last day of the month).
+
+          In practice, an SF_CAMPAIGN_ID is the concatenation of R-code + Year + Month, and its END_DATE represents the final day of that monthly campaign slice.
+
+          How users may refer to it in natural language:
+
+          “end date”
+
+          “campaign end”
+
+          “last day of campaign”
+
+          “campaign stop date”
+
+          “when did the campaign finish”
+
+          “close date”
+
+          When to use it in queries:
+
+          If the user asks: “When did campaign X end?” → return END_DATE.
+
+          If the user asks: “Show me campaigns that ended in March 2025” → filter END_DATE BETWEEN '2025-03-01' AND '2025-03-31'.
+
+          If the user asks: “Which R-codes wrapped up last quarter?” → group by R_CODE and return their END_DATE.
+
+          If the user asks: “What’s the campaign duration?” → calculate END_DATE – START_DATE + 1 (or reference IO_DAYS).
+
+          Agent guidance:
+
+          Treat END_DATE as the last day of the monthly Salesforce campaign slice tied to an R-code.
+
+          Always clarify that for multi-month R-codes, each SF_CAMPAIGN_ID has its own END_DATE (end of that month).
+
+          Use END_DATE in combination with START_DATE for campaign duration analysis, pacing checks, and delivery validation.
+
+          Remember: SF_CAMPAIGN_ID = R-code + Year + Month, so the END_DATE always aligns with the last day of that month."
+           
+        expr: END_DATE
+        data_type: DATE
+        sample_values:
+          - '2025-07-31'
+          - '2024-06-30'
+          - '2025-02-01'
+      - name: SF_INSERTION_TIME
+        synonyms:
+          - insertion_timestamp
+          - sf_insertion_date
+          - insertion_datetime
+          - sf_created_at
+          - sf_recorded_at
+          - sf_entry_time
+        description: sf_insertion_time represents the exact timestamp when a campaign record or related event was inserted into the Snowflake system. This column is primarily used for auditing, troubleshooting, and tracking data freshness rather than for direct business metrics. When answering questions related to sf_insertion_time, provide the timestamp value as stored without aggregation. If multiple rows exist for the same SF_campaign_id and day, return the corresponding sf_insertion_time values directly or use the latest (MAX) or earliest (MIN) insertion time only when explicitly required. Do not sum or average this column, as it is not a measure but a system-generated timestamp attribute.
+        expr: SF_INSERTION_TIME
+        data_type: TIMESTAMP_LTZ(9)
+        sample_values:
+          - 2025-09-16T12:04:01.080+0000
+      - name: START_DATE
+        synonyms:
+          - start_date
+          - begin_date
+          - initial_date
+          - commencement_date
+          - kickoff_date
+          - launch_date
+          - inception_date
+        description: |+
+          This column represents the start date of a Salesforce campaign (SF_CAMPAIGN_ID).
+          Each SF_CAMPAIGN_ID is tied to a specific R-code (the booking code) and represents a monthly slice of that R-code’s lifecycle.
+
+          If an R-code is booked to run for 12 months, it will generate 12 distinct SF_CAMPAIGN_IDs (one per month).
+
+          Each SF_CAMPAIGN_ID therefore corresponds to a unique month of an R-code.
+
+          In practice, an SF_CAMPAIGN_ID is nothing more than the concatenation of R-code + Year + Month.
+
+          START_DATE is the first day of the period covered by that SF_CAMPAIGN_ID.
+
+          How users may refer to it in natural language:
+
+          “start date”
+
+          “campaign start”
+
+          “when did the campaign start”
+
+          “first day of campaign”
+
+          “launch date”
+
+          “kickoff date”
+
+          When to use it in queries:
+
+          If the user asks: “When did campaign X start?” → return START_DATE.
+
+          If the user asks: “Show me all campaigns that started in January 2025” → filter START_DATE BETWEEN '2025-01-01' AND '2025-01-31'.
+
+          If the user asks: “Which R-codes launched in March?” → group by R_CODE and use START_DATE.
+
+          If the user asks: “How many campaigns started last quarter?” → count distinct SF_CAMPAIGN_IDs by START_DATE.
+
+          Agent guidance:
+
+          Treat START_DATE as the launch date of the monthly Salesforce campaign slice.
+
+          Always clarify that an R-code spanning multiple months will have multiple start dates (one per SF_CAMPAIGN_ID).
+
+          Use START_DATE for time-based filtering, pacing, and campaign lifecycle analysis.
+
+          Remember: SF_CAMPAIGN_ID = R-code + Year + Month, so START_DATE will always align with the first day of that monthly period.
+
+        expr: START_DATE
+        data_type: DATE
+        sample_values:
+          - '2025-07-01'
+          - '2025-05-01'
+          - '2025-02-01'
+    facts:
+      - name: BILLABLE_RATE
+        synonyms:
+          - billable_cost
+          - hourly_rate
+          - rate_per_unit
+          - chargeable_rate
+          - payable_rate
+          - unit_price
+          - io_rate
+        description: Billable_rate is a single rate value assigned to each SF_campaign_id for a given day and must be treated as an attribute . When answering questions about billable_rate, do not aggregate it; instead retrieve the rate at the SF_campaign_id + day level (for example, use a direct lookup or SELECT DISTINCT by SF_campaign_id and day). If multiple different billable_rate values exist for the same SF_campaign_id and day, flag this as a data inconsistency rather than combining values. Ensure joins preserve the one-to-one mapping by SF_campaign_id and day.
+        expr: BILLABLE_RATE
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '23'
+          - '7.0197'
+          - '12.5'
+      - name: BILLABLE_UNITS
+        synonyms:
+          - billable_quantity
+          - chargeable_units
+          - invoiced_units
+          - billable_amount
+          - chargeable_quantity
+        description: "\"the number of units we bill the client, the logic to calculated it is like this :  ,case\n    when BILLABLE_RATE_TYPE='CPM' and source_type='DSP' and data_source = 'criteo' and sf_advertiser in ('Qualcomm - US') then impressions \n    when BILLABLE_RATE_TYPE = 'CPM' and source_type='DSP' and product_code like '%DOOH%' then impressions\n    when BILLABLE_RATE_TYPE='CPMx' and source_type='DSP' then impressions      \n\twhen PACKAGE like '%Netflix%' and source_type='DSP' and sf_advertiser in ('Citizens Bank - US') then impressions\n    when PACKAGE like '%DOOH%' and source_type='DSP' and sf_advertiser in ('Circle K - US') then impressions\n\twhen sf_advertiser = 'Chevron - US' AND package like '%_TV%' and source_type ='DSP' then impressions\n\twhen sf_advertiser = 'Chevron - US' AND package not like '%_TV%' AND BILLABLE_RATE_TYPE='CPM' and source_type='AS'  then impressions\n    when BILLABLE_RATE_TYPE='CPM' and source_type='AS' and (sf_advertiser LIKE '%Abbott%' OR sf_advertiser in ('BP - US','Mizkan - US')) then impressions - unique_incidents\n\twhen BILLABLE_RATE_TYPE='CPCV' and source_type='DSP' and sf_advertiser in ('Ernst & Young - US')  then video_fully_played\n\twhen BILLABLE_RATE_TYPE='DCPM' and source_type='DSP' then impressions\n    when BILLABLE_RATE_TYPE='Free' and source_type='AS' and sf_advertiser in ('Richemont - US') then impressions\n    when BILLABLE_RATE_TYPE='dCPV' and source_type='DSP' then video_views\n\twhen sf_advertiser != 'INEOS Grenadier - US' AND sf_advertiser != 'Discover' AND BILLABLE_RATE_TYPE='CPM' and source_type='AS' then impressions\n    when BILLABLE_RATE_TYPE='dCPM' and source_type='DSP' then impressions\n\twhen BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' then impressions\n    when BILLABLE_RATE_TYPE='CPCV' and source_type='AS' then video_fully_played\n    when BILLABLE_RATE_TYPE='CPMV' and source_type='VP' then impressions\n    when BILLABLE_RATE_TYPE='CPV' and source_type='DSP' then video_views\n    else 0 end as billable_units\n\t\""
+        expr: BILLABLE_UNITS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '897'
+          - '55'
+          - '3698'
+      - name: BLOCKS
+        synonyms:
+          - units_blocked
+          - blocked_items
+          - blocked_entities
+          - blocked_records
+          - blocked_entries
+        description: |-
+          "This column represents the number of ad placements, slots, or units allocated and available for serving ads within a campaign, creative, or placement, depending on the reporting level. A block generally indicates a reserved or delivered ad unit opportunity, regardless of whether it led to an impression or click.
+          How users may refer to it in natural language:
+          “blocks”
+          “ad blocks”
+          “placements”
+          “slots”
+          “inventory blocks”
+          “number of blocks allocated”
+          “how many blocks were used”
+          When to use it in queries:
+          If the user asks: “How many blocks were served for this campaign?” → return BLOCKS.
+          If the user asks: “Compare blocks across campaigns or days” → group by SF_campaign_id or day and sum BLOCKS.
+          If the user asks: “Which campaign had the most blocks allocated?” → group by campaign and sum BLOCKS.
+          If the user asks: “Show me blocks by creative or media type” → group by that dimension and sum BLOCKS.
+          Agent guidance:
+          Always map user phrases like “blocks”, “placements”, or “slots” to this column.
+          Use BLOCKS for raw counts of allocated or delivered ad units.
+          Always aggregate by summing; never average or distinct-count.
+          Do not confuse BLOCKS with IMPRESSIONS — impressions represent actual ad deliveries to users, while blocks represent the placement units available or delivered at the system level.
+           "
+        expr: BLOCKS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '14'
+          - '72'
+      - name: BUDGET
+        synonyms:
+          - allocated_funds
+          - financial_plan
+          - expense_limit
+          - cost_estimate
+          - financial_allocation
+          - planned_expenditure
+          - monetary_allowance
+        description: |-
+          "This column represents the total allocated spending limit for a campaign (or in some cases, a creative) over its planned duration.
+          It defines the maximum amount that can be spent, as set during the campaign planning stage in Salesforce or the planning system.
+
+          Important:
+
+          BUDGET is a planned/allocated value, not actual spend.
+
+          It is a non-additive attribute → do not sum or average across campaigns, placements, or days.
+
+          Always reference it at the campaign level (SF_CAMPAIGN_ID) or at the campaign + day level if broken down by date.
+
+          How users may refer to it in natural language:
+
+          “budget”
+
+          “campaign budget”
+
+          “planned spend”
+
+          “allocated budget”
+
+          “how much was allocated”
+
+          “limit”
+
+          “cap”
+
+          “what we planned to spend”
+
+          When to use it in queries:
+
+          If the user asks: “What’s the budget for campaign X?” → return BUDGET.
+
+          If the user asks: “Compare spend vs budget” → use BUDGET for planned allocation and TOTAL_MEDIA_COST or UNCAPPED_SPEND for actuals.
+
+          If the user asks: “Is this campaign on pace with its budget?” → calculate pacing as SUM(TOTAL_MEDIA_COST) ÷ BUDGET.
+
+          If the user asks: “Which campaigns are over budget?” → filter where actual spend > BUDGET.
+
+          Agent guidance:
+
+          Treat BUDGET as the planned allocation (upper limit), not a spend metric.
+
+          Always map user-friendly terms like “planned spend”, “allocated budget”, or “campaign cap” to this column.
+
+          Use directly (not aggregated) at the campaign level.
+
+          For budget vs spend analysis:
+
+          Use BUDGET for the plan side.
+
+          Use TOTAL_MEDIA_COST (agency spend) or UNCAPPED_SPEND (advertiser spend) for the actuals side.
+
+          Remind that exceeding the BUDGET means overspend against the planned cap, while underspend indicates under-delivery or cost savings."
+        expr: BUDGET
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '27343.97'
+          - '34380'
+          - '222381.03'
+      - name: CLICKS
+        synonyms:
+          - ad_clicks
+          - link_clicks
+          - button_clicks
+          - tap_throughs
+          - click_events
+        description: |-
+          "This column represents the number of times users clicked on an ad (any creative, placement, or format, depending on the reporting level).
+          A click is recorded when a user actively interacts with the ad by selecting it — for example, clicking on a banner, tapping on a mobile ad, or clicking through a video overlay.
+
+          It is one of the core engagement metrics, used to measure how often ads drive user interaction that can lead to a landing page visit or other desired action.
+
+          How users may refer to it in natural language:
+
+          “clicks”
+
+          “ad clicks”
+
+          “user interactions”
+
+          “tap-throughs”
+
+          “number of people who clicked”
+
+          “click volume”
+
+          “how many clicks”
+
+          When to use it in queries:
+
+          If the user asks: “How many people clicked on my ad?” → return CLICKS.
+
+          If the user asks: “What’s the click-through rate (CTR)?” → calculate CLICKS ÷ IMPRESSIONS.
+
+          If the user asks: “Which campaign had the most clicks?” → group by campaign and sum CLICKS.
+
+          If the user asks: “Show me clicks by device / channel / DSP” → group by that dimension and sum CLICKS.
+
+          Agent guidance:
+
+          Always map user phrases like “clicks”, “ad clicks”, or “how many people interacted with the ad” to this column.
+
+          Use CLICKS for raw interaction counts.
+
+          If the user is asking about rates or efficiency (e.g., “CTR”), combine CLICKS with IMPRESSIONS.
+
+          Do not confuse clicks with conversions — clicks are the initial interaction, not the completed action."
+        expr: CLICKS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '12'
+          - '1'
+          - '0'
+      - name: CONVERSIONS
+        synonyms:
+          - leads
+          - sales
+          - signups
+          - transactions
+          - goals
+          - completions
+          - successes
+          - achievements
+          - accomplishments
+        description: |-
+          "This column represents the number of tracked conversion events attributed to an ad campaign, placement, or line item, as reported by the DSP, ad server, or attribution platform.
+          A conversion is a user action defined by the advertiser, such as a purchase, signup, form fill, app install, or other goal completion.
+
+          📌 Important: The exact definition of a conversion may vary by advertiser or platform, depending on the tracking setup (pixel, tag, or server-side integration).
+
+          How users may refer to it in natural language:
+
+          “conversions”
+
+          “actions”
+
+          “sales”
+
+          “purchases”
+
+          “signups”
+
+          “completed goals”
+
+          “outcomes”
+
+          “how many actions we got”
+
+          When to use it in queries:
+
+          If the user asks: “How many conversions did campaign X drive?” → return CONVERSIONS.
+
+          If the user asks: “What’s the CPA?” → calculate TOTAL_MEDIA_COST ÷ CONVERSIONS.
+
+          If the user asks: “Which DSP delivered the most sales?” → group by DATASOURCE and sum CONVERSIONS.
+
+          If the user asks: “What is the conversion rate?” → calculate CONVERSIONS ÷ CLICKS (or ÷ IMPRESSIONS, depending on definition).
+
+          If the user asks: “How did conversions trend over time?” → group by DAY and sum CONVERSIONS.
+
+          Agent guidance:
+
+          Always interpret “conversions” or related business outcomes (sales, signups, installs) as referring to this column.
+
+          Use raw counts (SUM(CONVERSIONS)) when users ask for totals.
+
+          Pair with spend (TOTAL_MEDIA_COST) to calculate CPA (Cost per Action).
+
+          Pair with clicks or impressions to calculate conversion rate.
+
+          Clarify that this is reported conversions from the DSP/ad server — not necessarily the same as final business-reported sales data."
+        expr: CONVERSIONS
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '12'
+          - '282'
+          - '25'
+      - name: CT_CONVERSIONS
+        synonyms:
+          - click_through_conversions
+          - total_ct_conversions
+          - conversions_click_through
+          - click_throughs
+          - ct_total_conversions
+        description: The total number of conversions generated by an advertiser's ad campaigns, where a conversion is defined as a desired action taken by a user after clicking on an ad, such as making a purchase, filling out a form, or subscribing to a service.
+        expr: CT_CONVERSIONS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '5'
+          - '2'
+      - name: DAYS_ELAPSED
+        synonyms:
+          - elapsed_days
+          - days_passed
+          - time_elapsed
+          - days_gone_by
+          - days_since_start
+        description: DAYS_ELAPSED represents the number of days that have passed since the start of a campaign up to the given day. It is a derived attribute used to track campaign progression over time and should not be aggregated. When answering questions involving DAYS_ELAPSED, use the value directly at the SF_campaign_id + day level. If multiple rows exist for the same campaign and day, ensure consistency by returning the distinct value. DAYS_ELAPSED is a non-additive field and is intended for trend analysis, reporting, and monitoring campaign duration rather than calculations.
+        expr: DAYS_ELAPSED
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '1'
+      - name: DAYS_REMAINING
+        synonyms:
+          - days_left
+          - remaining_days
+          - days_to_end
+          - time_remaining
+          - days_until_end
+          - countdown_days
+        description: Days_remaining represents the number of days left until the end of an advertiser’s campaign. It is a derived attribute that indicates campaign progress and should not be aggregated. For any queries or analyses involving days_remaining, use the value directly at the SF_campaign_id + day level. If multiple rows exist for the same campaign and day, ensure consistency by returning the distinct value, as it should remain constant. days_remaining is a non-additive attribute, meaning it should be used for status reporting, filtering, or trend analysis (e.g., campaigns nearing completion), rather than for mathematical aggregation.
+        expr: DAYS_REMAINING
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '2'
+          - '6'
+          - '21'
+      - name: DCPX_SPEND
+        synonyms:
+          - DCPX_SPEND
+        description: ignore this column
+        expr: DCPX_SPEND
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '2.013945715'
+          - '840.027387'
+          - '61.236221996'
+      - name: DSP_MEDIA_COST
+        synonyms:
+          - net media spend
+        description: |-
+          This column represents the net media cost reported by the DSP (Demand-Side Platform), excluding additional fees such as data fees, technology fees, or third-party charges.
+          It reflects only the pure media buying cost — the amount spent directly on inventory (impressions, views, clicks) without layered add-on costs.
+
+          📌 Important:
+
+          Use DSP_MEDIA_COST only when the user explicitly asks for spend/cost excluding fees.
+
+          For general spend, media spend, or agency spend questions, the authoritative field is TOTAL_MEDIA_COST.
+
+          How users may refer to it in natural language:
+
+          “media cost without fees”
+
+          “DSP net cost”
+
+          “inventory cost”
+
+          “cost of media only”
+
+          “spend excluding data fees”
+
+          “net media spend”
+
+          “what we paid the DSP just for media”
+
+          When to use it in queries:
+
+          If the user asks: “How much did we spend excluding fees?” → use SUM(DSP_MEDIA_COST).
+
+          If the user asks: “What was the pure inventory cost on YouTube?” → filter PRODUCT_CODE for YouTube/Video values and sum DSP_MEDIA_COST.
+
+          If the user asks: “Compare DSP net cost vs total cost” → use DSP_MEDIA_COST for the net value and TOTAL_MEDIA_COST for the gross cost including fees.
+
+          If the user asks: “What’s the CPM excluding fees?” → calculate (DSP_MEDIA_COST ÷ IMPRESSIONS) × 1000.
+
+          Agent guidance:
+
+          Default to TOTAL_MEDIA_COST for spend questions unless the user specifically mentions excluding fees (e.g., “net cost,” “excluding data fees,” “inventory only”).
+
+          Treat DSP_MEDIA_COST as the net media amount vs. TOTAL_MEDIA_COST as the gross media cost.
+
+          Always clarify to the user when answering:
+
+          TOTAL_MEDIA_COST = agency spend (gross), includes fees.
+
+          DSP_MEDIA_COST = DSP net media spend, excludes fees.
+        expr: DSP_MEDIA_COST
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '0.118053'
+          - '1.320209'
+          - '0.025378'
+      - name: IMPRESSIONS
+        synonyms:
+          - “impressions”  “ad impressions”  “number of times the ad was shown”  “ad views” (⚠️ some users may say this
+          - but be careful to distinguish from VIDEO_VIEWS)  “times served”  “how many times ads were delivered”  “ad loads”
+        description: |-
+          This column represents the number of times an ad was served (loaded) on a user’s device, regardless of whether the user interacted with it.
+          An impression is counted whenever an ad is requested and rendered on a page, app, or video player, as reported by the DSP, ad server, or platform.
+
+          It is the baseline delivery metric in digital advertising, used to measure campaign reach and frequency.
+
+          How users may refer to it in natural language:
+
+          “impressions”
+
+          “ad impressions”
+
+          “number of times the ad was shown”
+
+          “ad views” (⚠️ some users may say this, but be careful to distinguish from VIDEO_VIEWS)
+
+          “times served”
+
+          “how many times ads were delivered”
+
+          “ad loads”
+
+          When to use it in queries:
+
+          If the user asks: “How many times did my ad show?” → return IMPRESSIONS.
+
+          If the user asks: “What’s the CPM?” → calculate (TOTAL_MEDIA_COST ÷ IMPRESSIONS) × 1000.
+
+          If the user asks: “Which campaign had the most delivery?” → group by campaign and sum IMPRESSIONS.
+
+          If the user asks: “Compare display vs video delivery” → group by PRODUCT_CODE and use IMPRESSIONS.
+
+          If the user asks: “What’s the CTR?” → calculate CLICKS ÷ IMPRESSIONS.
+
+          Agent guidance:
+
+          Treat IMPRESSIONS as the core delivery metric — the starting point for most performance KPIs.
+
+          Always map user-friendly terms like “number of times ads were shown”, “delivery”, or “ad views” (when not explicitly video) to this column.
+
+          Be careful to distinguish:
+
+          IMPRESSIONS = ad loads/deliveries (baseline exposure)
+
+          VIDEO_VIEWS = actual video play starts (engagement threshold)
+
+          Use IMPRESSIONS in combination with spend (TOTAL_MEDIA_COST) and clicks (CLICKS) to derive CPM, CTR, and cost efficiency metrics.
+        expr: IMPRESSIONS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '770'
+          - '137'
+          - '822'
+      - name: IO_DAYS
+        synonyms:
+          - io_duration
+          - io_length
+          - io_period
+          - io_span
+          - io_term
+        description: |-
+          "This column represents the total number of days an Insertion Order (IO) or campaign is scheduled to run, based on its start date and end date.
+          It is a derived metric that calculates the length of the campaign in days (inclusive of both start and end dates).
+
+          For example:
+
+          If a campaign runs from 2025-01-01 to 2025-01-31, then IO_DAYS = 31.
+
+          If it runs from 2025-03-10 to 2025-03-20, then IO_DAYS = 11.
+
+          How users may refer to it in natural language:
+
+          “campaign duration”
+
+          “number of days the campaign runs”
+
+          “IO length”
+
+          “campaign length”
+
+          “flight duration”
+
+          “how many days is the campaign active”
+
+          When to use it in queries:
+
+          If the user asks: “How long did this campaign run?” → return IO_DAYS.
+
+          If the user asks: “Show me campaigns with duration longer than 30 days” → filter IO_DAYS > 30.
+
+          If the user asks: “Compare spend per campaign day” → divide total_media_cost ÷ IO_DAYS.
+
+          If the user asks: “What’s the average campaign length in this DSP?” → calculate AVG(IO_DAYS).
+
+          Agent guidance:
+
+          Treat IO_DAYS as the planned campaign duration in days.
+
+          Always map user-friendly terms like “campaign duration”, “campaign length”, or “number of days running” to this column.
+
+          Use it for time-based analysis (e.g., spend per day, pacing, comparing long vs short campaigns).
+
+          Do not confuse IO_DAYS with actual delivery days — this is based on the scheduled start and end dates, not whether impressions actually served every day."
+        expr: IO_DAYS
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '13'
+          - '16'
+          - '15'
+      - name: IO_MARGIN_RATE
+        synonyms:
+          - gross_margin_rate
+          - markup_rate
+          - io_profit_rate
+          - margin_percentage
+          - gross_profit_percentage
+          - io_profit_percentage
+        description: |-
+          "This column represents the estimated margin rate for an Insertion Order (IO) as planned or targeted in MediaOcean / Radia (or equivalent buying platforms).
+          It reflects the percentage margin the agency expects to achieve on the campaign spend — essentially, what they are aiming for when setting up the IO.
+
+           Important: IO_MARGIN_RATE is a planned / estimated value, not the final realized margin.
+          The actual margin at the end of the campaign may differ due to delivery variations, adjustments, fees, rebates, or discrepancies.
+
+          How users may refer to it in natural language:
+
+          “margin rate”
+
+          “expected margin”
+
+          “planned margin”
+
+          “estimated margin”
+
+          “target margin”
+
+          “Radia margin”
+
+          “what margin we aimed for”
+
+          When to use it in queries:
+
+          If the user asks: “What margin was targeted for this campaign?” → return IO_MARGIN_RATE.
+
+          If the user asks: “Compare planned margin vs actual margin” → use IO_MARGIN_RATE for planned and actuals from finance/reconciliation data.
+
+          If the user asks: “What was the expected margin by advertiser or DSP?” → group by that dimension and return AVG(IO_MARGIN_RATE).
+
+          If the user asks: “Which campaigns had a planned margin above 20%?” → filter IO_MARGIN_RATE > 0.20.
+
+          Agent guidance:
+
+          Treat IO_MARGIN_RATE as a forecasted / target margin rate, not the realized financial result.
+
+          Always clarify that this is from Radia/planning systems and may differ from actuals.
+
+          Map user-friendly terms like “expected margin”, “planned margin”, or “margin in Radia” to this field.
+
+          If users ask about actual profit/margin, guide them to compare with finalized finance data (not only this column)."
+        expr: IO_MARGIN_RATE
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '0'
+          - '61.1743'
+          - '40.4393'
+      - name: MEASURED_IMPRESSIONS
+        synonyms:
+          - monitored_impressions
+          - tracked_impressions
+          - recorded_impressions
+          - verified_impressions
+          - counted_impressions
+        description: |-
+          "This column represents the number of impressions that were eligible to be measured for viewability by a verification vendor (e.g., IAS, DoubleVerify) or by the DSP/ad server.
+          Not all served impressions can be measured — for example, due to technical restrictions, unsupported environments, or lack of tracking tags.
+
+          MEASURED_IMPRESSIONS is therefore a subset of total IMPRESSIONS, and it provides the denominator for calculating viewability rate.
+
+          How users may refer to it in natural language:
+
+          “measured impressions”
+
+          “impressions that could be measured”
+
+          “measurable impressions”
+
+          “eligible impressions”
+
+          “count of impressions that were trackable for viewability”
+
+          When to use it in queries:
+
+          If the user asks: “How many impressions were measurable?” → return MEASURED_IMPRESSIONS.
+
+          If the user asks: “What’s the viewability rate?” → calculate VIEWABLE_IMPRESSIONS ÷ MEASURED_IMPRESSIONS.
+
+          If the user asks: “Compare measurable delivery across DSPs” → group by DATASOURCE and sum MEASURED_IMPRESSIONS.
+
+          If the user asks: “How much of my delivery could actually be measured?” → compare MEASURED_IMPRESSIONS vs total IMPRESSIONS.
+
+          Agent guidance:
+
+          Treat MEASURED_IMPRESSIONS as the denominator for viewability calculations.
+
+          Always map user phrases like “measurable impressions” or “impressions that could be tracked” to this column.
+
+          Clarify the distinction:
+
+          IMPRESSIONS = all served ads
+
+          MEASURED_IMPRESSIONS = ads eligible for viewability measurement
+
+          VIEWABLE_IMPRESSIONS = ads that passed the MRC/IAB viewability threshold
+
+          Use this column to provide transparency on measurement coverage, since not all impressions can be audited."
+        expr: MEASURED_IMPRESSIONS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '497'
+          - '4894'
+          - '5990'
+      - name: PAYABLE_UNITS
+        synonyms:
+          - payable_quantity
+          - payable_amount
+          - payable_volume
+          - payable_count
+        description: "\n\"so its the units for which  we pay the DSPs for, the logic for it is : case\n    when BILLABLE_RATE_TYPE='Free' and source_type='DSP' then impressions\n\twhen BILLABLE_RATE_TYPE='DCPM' and source_type='DSP' then impressions\n\twhen BILLABLE_RATE_TYPE='CPCV' AND source_type='AS' then impressions\t\n    when BILLABLE_RATE_TYPE='CPM' and source_type='DSP' then impressions\n    when BILLABLE_RATE_TYPE='dCPM' and source_type='DSP' then impressions\n\twhen BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' then impressions\n    when BILLABLE_RATE_TYPE='CPMV' and source_type='VP' then impressions\n    when BILLABLE_RATE_TYPE='CPV' and source_type='DSP' then video_views\n\twhen BILLABLE_RATE_TYPE='dCPV' and source_type='DSP' then video_views\n\twhen BILLABLE_RATE_TYPE='CPCV' and source_type='DSP' then video_fully_played\n    else 0 end as payable_Units\""
+        expr: PAYABLE_UNITS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '422'
+          - '7638'
+          - '0'
+      - name: PLANNED_UNITS
+        synonyms:
+          - planned_quantity
+          - allocated_units
+          - scheduled_units
+          - projected_units
+          - planned_capacity
+          - planned_volume
+          - planned_amount
+          - planned_allocation
+        description: |-
+          "This column represents the booked or planned delivery volume for a campaign, typically measured in impressions (imps).
+          It reflects the number of units (most often ad impressions) that were agreed upon in the campaign plan or insertion order — i.e., the target volume the advertiser is aiming to achieve.
+
+           Important: PLANNED_UNITS is defined at the campaign level. This means it captures the overall campaign booking, not the realized delivery at the line-item or impression level.
+
+          In other words, PLANNED_UNITS = the campaign’s committed number of impressions to be delivered, not the actual delivered amount.
+
+          How users may refer to it in natural language:
+
+          “booked impressions”
+
+          “planned impressions”
+
+          “booked units”
+
+          “target impressions”
+
+          “committed volume”
+
+          “how many imps we are supposed to get”
+
+          “campaign booked delivery”
+
+          “expected delivery”
+
+          “planned delivery”
+
+          When to use it in queries:
+
+          If the user asks: “How many impressions were booked for this campaign?” → return PLANNED_UNITS.
+
+          If the user asks: “What’s the target delivery vs actual delivery?” → compare PLANNED_UNITS (planned campaign target) vs delivered impressions (actual column, e.g., DELIVERED_UNITS or IMPRESSIONS).
+
+          If the user asks: “Show me campaigns with underdelivery” → use PLANNED_UNITS vs actuals to calculate delivery % (Delivered ÷ Planned).
+
+          If the user asks: “What’s the booked volume by DSP?” → group by campaign (or DSP → campaign) and sum PLANNED_UNITS.
+
+          Agent guidance:
+
+          Treat PLANNED_UNITS as the campaign-level target/committed impressions.
+
+          Map user-friendly terms like “booked units”, “target impressions”, or “planned delivery” to this field.
+
+          Do not confuse with actual delivery (impressions served) — this is the goal, not the realized performance.
+
+          Always pair with actual delivery metrics when users ask about performance, pacing, or under/over delivery."
+        expr: PLANNED_UNITS
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '891184'
+          - '811595'
+          - '2872957'
+      - name: REVENUE
+        synonyms:
+          - REVENUE
+        description: ignore this column
+        expr: REVENUE
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '95'
+          - '1000'
+          - '0'
+      - name: TOTAL_MEDIA_COST
+        synonyms:
+          - “media spend”  “agency spend”  “spend”  “investment”  “ad spend”  “campaign spend”  “budget used”  “cost of media”  “total cost”  “money spent”
+        description: |-
+          This column represents the total amount of money the agency spent on media buying for a given line item, campaign, or placement, as reported by the DSP (Demand-Side Platform).
+          It reflects the gross media cost before any adjustments such as fees, rebates, or markups (depending on DSP reporting).
+
+          📌 Important: TOTAL_MEDIA_COST is the authoritative column to always use when users ask about Agency spend — i.e., how much money the agency spent to buy media.
+          It should not be confused with advertiser spend, which may include fees, margins, or contractual adjustments.
+
+          How users may refer to it in natural language:
+
+          “media spend”
+
+          “agency spend”
+
+          “spend”
+
+          “investment”
+
+          “ad spend”
+
+          “campaign spend”
+
+          “budget used”
+
+          “cost of media”
+
+          “total cost”
+
+          “money spent”
+
+          “how much we paid to run ads”
+
+          When to use it in queries:
+
+          If the user asks: “Show me the agency spend for campaign X” → use SUM(TOTAL_MEDIA_COST).
+
+          If the user asks: “How much did we spend on YouTube last month?” → filter PRODUCT_CODE for YouTube/Video values, then sum TOTAL_MEDIA_COST.
+
+          If the user asks: “What’s the total investment by DSP?” → group by DSP and sum TOTAL_MEDIA_COST.
+
+          If the user asks: “What was the cost of display vs video?” → group by normalized MEDIA_TYPE (from PRODUCT_CODE) and sum TOTAL_MEDIA_COST.
+
+          Agent guidance:
+
+          Always interpret terms like “agency spend”, “media spend”, or “ad spend” as referring to this column.
+
+          Use aggregations like SUM(TOTAL_MEDIA_COST) when users ask for totals.
+
+          Combine with PRODUCT_CODE, CAMPAIGN_ID, SF_ADVERTISER, SUPPLIER_NAME, DAY, or other dimensions when the question specifies breakdowns (e.g., by channel, campaign, DSP, advertiser, or time period).
+
+          If users mention budget vs spend, use TOTAL_MEDIA_COST for the spend side and compare it to the budget column (if available).
+        expr: TOTAL_MEDIA_COST
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '390.8617'
+          - '2405.2292'
+          - '107.1998'
+      - name: UNCAPPED_SPEND
+        synonyms:
+          - unlimited_spend
+          - total_spend
+          - spend_without_cap
+          - unrestricted_spend
+          - full_spend
+          - spend_without_limit
+        description: |-
+          This column represents the amount charged to the advertiser (client) for media buying.
+          It reflects the advertiser’s spend — i.e., how much the advertiser pays the agency for the campaign, line item, or placement.
+          Unlike TOTAL_MEDIA_COST (agency spend), which shows how much money the agency actually spent with DSPs/vendors, UNCAPPED_SPEND shows the invoiced/chargeable spend to the advertiser.
+
+          📌 Important: UNCAPPED_SPEND is the column to always use whenever the question is about advertiser spend, client spend, or how much the advertiser pays.
+          It should not be confused with TOTAL_MEDIA_COST, which is strictly the agency’s cost.
+
+          How users may refer to it in natural language:
+
+          “advertiser spend”
+
+          “client spend”
+
+          “what the advertiser pays”
+
+          “media cost billed to client”
+
+          “invoiced spend”
+
+          “gross spend”
+
+          “chargeable spend”
+
+          “how much the client is paying”
+
+          When to use it in queries:
+
+          If the user asks: “How much did the advertiser pay for campaign X?” → use SUM(UNCAPPED_SPEND).
+
+          If the user asks: “Show me client spend by DSP” → group by DATASOURCE and sum UNCAPPED_SPEND.
+
+          If the user asks: “What is advertiser spend vs agency spend?” → compare UNCAPPED_SPEND (advertiser spend) vs TOTAL_MEDIA_COST (agency spend).
+
+          If the user asks: “How much was billed to brand Y last quarter?” → filter by SF_ADVERTISER and sum UNCAPPED_SPEND.
+
+          Agent guidance:
+
+          Always map user phrases like “advertiser spend”, “client spend”, “how much we billed the advertiser”, or “how much the client paid” to this column.
+
+          When users compare spend vs margin, use UNCAPPED_SPEND for advertiser spend and TOTAL_MEDIA_COST for agency spend.
+
+          Combine with dimensions such as SF_ADVERTISER, CAMPAIGN_ID, PRODUCT_CODE, SUPPLIER_NAME, or DAY for breakdowns.
+
+          Remember: UNCAPPED_SPEND is client-facing (billed amount), while TOTAL_MEDIA_COST is agency-facing (actual cost). LOGIC  :  case
+              when billable_rate_type = 'CPM' and source_type='DSP' and product_code like '%DOOH%' then billable_units * billable_rate / 1000
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser = 'Chevron - US' AND  BILLABLE_RATE_TYPE='CPM' and source_type='AS' and package not like '%_TV%' then Billable_Units*Billable_Rate/1000   
+              -------------------------------------------------------------------------------------------------------------------------------------------
+                  when sf_advertiser = 'Chevron - US' AND package like '%_TV%' and source_type = 'DSP' then Billable_Units*Billable_Rate/1000
+              when BILLABLE_RATE_TYPE = 'CPM' AND source_type = 'AS' then billable_units * billable_rate / 1000
+                  ---------------------------------------------------------------------------------------------------------------------------------------------
+              when sf_advertiser ='Citizens Bank - US' and package like '%Netflix%' and source_type='DSP' then Billable_Units*Billable_Rate/1000
+                  -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser = 'Qualcomm - US' 
+                  AND BILLABLE_RATE_TYPE='CPM' 
+                  AND source_type='DSP' 
+                  AND data_source ='criteo' 
+              then billable_units * billable_rate / 1000
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser IN ('INEOS Grenadier - US', 'Discover')
+                  AND BILLABLE_RATE_TYPE='CPM' 
+                  AND source_type='DSP'
+              then Billable_Units*Billable_Rate/1000
+              -------------------------------------------------------------------------------------------------------------------------------------------      
+
+              when sf_advertiser LIKE '%Bausch%' AND BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' and package like '%P2XL4HR%' then
+              (Total_Media_Cost/.50)
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+                  --updating this condition 17JUNE2025
+              when sf_advertiser LIKE '%Bausch%' AND day > '2025-01-31' and day < '2025-05-01' and source_type='DSP' and upper(supplier_name) like '%AMAZON%' then 
+              (Total_Media_Cost/.60)
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+                  --adding this new condition 17JUNE2025
+              when sf_advertiser LIKE '%Bausch%' AND day > '2025-04-30' and source_type='DSP' and upper(supplier_name) like '%AMAZON%' then 
+              Billable_Units * Billable_Rate / 1000
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser LIKE '%Bausch%' AND BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' and package like '%P2ZP7HZ%' then 
+              (Total_Media_Cost/.52) 
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser LIKE '%Bausch%' AND BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' and package like '%P2XL4Q2%' then 
+              (Total_Media_Cost/.55)    
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser LIKE '%Bausch%' AND BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' and package like '%P2XMQ0Y%' then 
+              (Total_Media_Cost/.77)  
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser LIKE '%Bausch%' AND BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' and package like '%P2ZHW8H%' then 
+              (Total_Media_Cost/.52) 
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser LIKE '%Bausch%' AND BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' and package like '%P2ZHW97%' then 
+              (Total_Media_Cost/.70)    
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+              when sf_advertiser LIKE '%Bausch%' AND BILLABLE_RATE_TYPE='DCPx' and source_type='DSP' and package like '%P2VYYN2%' then 
+              (Total_Media_Cost/.60) 
+              -------------------------------------------------------------------------------------------------------------------------------------------  
+                  WHEN LOWER(TRIM(sf_advertiser)) LIKE '%pvh%'
+                   AND billable_rate_type = 'DCPx'
+                   AND source_type = 'DSP'
+                  THEN COALESCE(Total_Media_Cost, 0) / 0.5
+
+              ---------------------------------------------------------------------------------------------------------------------------------------------  
+                  WHEN LOWER(TRIM(sf_advertiser)) = 'mga entertainment inc - us'
+                   AND billable_rate_type = 'dCPV'
+                           AND source_type = 'DSP'
+                           AND LOWER(TRIM(buying_model)) = 'disclosed'
+                  THEN (Total_Media_Cost / (100 - IO_MARGIN_RATE)) * 100
+                  -------------------------------------------------------------------------------------------------------------------------------------------
+                  WHEN LOWER(TRIM(sf_advertiser)) LIKE '%pvh%'
+                   AND billable_rate_type = 'dCPV'
+                           AND source_type = 'DSP'
+                           AND (
+                                    LOWER(TRIM(buying_model)) = 'non-disclosed margin' OR
+                                    LOWER(TRIM(buying_model)) = 'all-inclusive'
+                           )
+                  THEN COALESCE(Total_Media_Cost, 0) / 0.5
+                  -------------------------------------------------------------------------------------------------------------------------------------------
+                  WHEN billable_rate_type = 'dCPV'
+                           AND source_type = 'DSP'
+                           AND (
+                                    LOWER(TRIM(buying_model)) = 'non-disclosed margin' OR
+                                    LOWER(TRIM(buying_model)) = 'all-inclusive'
+                           )
+                  THEN dcpx_spend
+                  -------------------------------------------------------------------------------------------------------------------------------------------
+                  WHEN billable_rate_type = 'CPCV'
+                           AND source_type = 'AS'
+                  THEN Billable_Units * billable_rate
+              -------------------------------------------------------------------------------------------------------------------------------------------    
+                  WHEN (sf_advertiser LIKE '%Abbott%' OR sf_advertiser LIKE '%PVH%' OR LOWER(TRIM(sf_advertiser)) IN ('citizens bank - us','ineos grenadier - us','richemont - us','boots - us'))
+                   AND billable_rate_type = 'CPMx'
+                           AND source_type = 'DSP'
+                  THEN Billable_Units * billable_rate / 1000
+              -------------------------------------------------------------------------------------------------------------------------------------------        
+                  WHEN  billable_rate_type = 'CPV' AND source_type = 'DSP'
+                  THEN video_views * billable_rate
+
+              ------------------------------------------------------------------------------------------------------------------------------------------- 
+                  WHEN sf_advertiser = 'Harley-Davidson - US'
+                   AND billable_rate_type = 'CPCV'
+                           AND source_type = 'DSP'
+                  THEN video_views * billable_rate
+
+                  -------------------------------------------------------------------------------------------------------------------------------------------    
+              when sf_advertiser in ('Chevron - US')
+                  and BILLABLE_RATE_TYPE='dCPM'
+                  and source_type='DSP'
+                  and (BUYING_MODEL='Disclosed' or BUYING_MODEL='Added Value') 
+              then Total_Media_Cost/(1-(IO_MARGIN_RATE/100))
+              
+              -------------------------------------------------------------------------------------------------------------------------------------------        
+                  when billable_rate_type = 'DCPx' and source_type = 'DSP' then dcpx_spend
+              -------------------------------------------------------------------------------------------------------------------
+                  when billable_rate_type = 'CPCV' and source_type='AS' then video_fully_played * billable_rate
+              ------------------------------------------------------------------------------------------------------------------- 
+                  when billable_rate_type = 'CPMV' and source_type = 'VP' then billable_units * billable_rate / 1000
+              else 0 end as uncapped_spend
+        expr: UNCAPPED_SPEND
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '76.942'
+          - '1.638'
+          - '0.234'
+      - name: UNIQUE_INCIDENTS
+        synonyms:
+          - distinct_events
+          - one_off_events
+          - singular_occurrences
+          - individual_cases
+          - discrete_incidents
+        description: UNIQUE_INCIDENTS represents the count of distinct incidents, events, or occurrences recorded for a campaign, creative, or activity within a given day. This metric should always be aggregated when answering questions, with values summed at the SF_CAMPAIGN_ID + day level to ensure campaign-level and daily accuracy. If queries span multiple campaigns or days, roll up results by summing across the relevant combinations. Each incident is counted only once per unique occurrence, making UNIQUE_INCIDENTS an additive measure suitable for reporting total distinct events over time.
+        expr: UNIQUE_INCIDENTS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '1657'
+          - '1'
+          - '0'
+      - name: VIDEO_COMPLETION_25
+        synonyms:
+          - quarter_video_completion
+          - video_completion_quarter
+          - video_viewed_25_percent
+          - partial_video_completion
+          - video_played_25
+        description: |-
+          "This column represents the count of video impressions that reached at least 25% completion.
+          It captures how many times a video ad was watched through the first quarter (25%) of its duration, regardless of whether the viewer continued beyond that point.
+
+          How users may refer to it in natural language:
+
+          “25% video completions”
+
+          “quarter video views”
+
+          “video watched 25%”
+
+          “partial completions”
+
+          “first quartile completions”
+
+          “how many people watched the first 25%”
+
+          “25% view count”
+
+          When to use it in queries:
+
+          If the user asks: “How many people watched at least a quarter of the video?” → return VIDEO_COMPLETION_25.
+
+          If the user asks: “Show me video engagement at 25% vs 50% vs 100%” → compare across completion metrics (e.g., VIDEO_COMPLETION_25, VIDEO_COMPLETION_50, VIDEO_COMPLETION_100).
+
+          If the user asks: “What’s the 25% completion rate?” → calculate VIDEO_COMPLETION_25 ÷ VIDEO_STARTS (or IMPRESSIONS, depending on DSP definition).
+
+          If the user asks: “Which ad had the highest 25% completion?” → group by the relevant dimension (placement, creative, etc.) and use this column.
+
+          Agent guidance:
+
+          Treat VIDEO_COMPLETION_25 as an engagement/quality metric, not a cost or delivery metric.
+
+          Always normalize into a rate when the user asks about percentages (divide completions by starts or impressions).
+
+          Recognize user-friendly phrases like “quarter views”, “25% completions”, or “video watched a quarter of the way” as referring to this column.
+
+          Use alongside VIDEO_COMPLETION_50, VIDEO_COMPLETION_75, and VIDEO_COMPLETION_100 to illustrate drop-off and video engagement funnel."
+        expr: VIDEO_COMPLETION_25
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '0'
+          - '4209'
+          - '3549'
+      - name: VIDEO_COMPLETION_50
+        synonyms:
+          - midpoint_video_completion
+          - video_completion_half
+          - fifty_percent_video_completion
+          - video_completion_at_half
+          - half_video_completion_rate
+        description: VIDEO_COMPLETION_50 represents the number of times a video ad was watched at least 50% of its total duration by users. This metric indicates partial engagement with video content and should always be aggregated when answering questions. Values from the VIDEO_COMPLETION_50 column must be summed at the SF_campaign_id + day level to ensure campaign-level and daily accuracy. If queries span multiple campaigns or days, results should be rolled up by summing across the relevant combinations. VIDEO_COMPLETION_50 is an additive measure, and a single user can contribute multiple events if they watch multiple videos or the same video more than once.
+        expr: VIDEO_COMPLETION_50
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '7861'
+          - '0'
+      - name: VIDEO_COMPLETION_75
+        synonyms:
+          - three_quarters_video_completion
+          - video_completion_rate_75
+          - video_completion_percentage_75
+          - video_viewed_75_percent
+          - video_watched_75_percent
+        description: VIDEO_COMPLETION_75 represents the number of times a video ad was watched at least 75% of its total duration by users. This metric indicates a higher level of engagement compared to VIDEO_COMPLETION_50 and should always be aggregated when answering questions. Values from the VIDEO_COMPLETION_75 column must be summed at the SF_CAMPAIGN_ID + day level to ensure campaign-level and daily accuracy. If queries span multiple campaigns or days, results should be rolled up by summing across the relevant combinations. A single user can contribute multiple events if they watch multiple videos or the same video more than once. VIDEO_COMPLETION_75 is an additive measure, useful for measuring partial video engagement.
+        expr: VIDEO_COMPLETION_75
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '0'
+          - '3531'
+          - '11628'
+      - name: VIDEO_FULLY_PLAYED
+        synonyms:
+          - video_completed
+          - video_finished
+          - fully_played_videos
+          - video_played_to_end
+          - video_viewed_to_completion
+        description: VIDEO_FULLY_PLAYED represents the number of times a video ad was watched through to completion by users. This is an additive performance metric and should always be aggregated when answering questions. The values from the VIDEO_FULLY_PLAYED column must be summed, and the aggregation should be done at the SF_campaign_id + day level to ensure campaign-level and daily accuracy. If queries span multiple campaigns or days, results should be rolled up by summing across those combinations. Note that this metric captures only full video completions, not partial plays, and multiple completions can be generated by the same user if they fully watch the ad more than once. Always treat VIDEO_FULLY_PLAYED as an additive measure and avoid non-sum operations unless specifically requested
+        expr: VIDEO_FULLY_PLAYED
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '803'
+          - '56'
+          - '0'
+      - name: VIDEO_PLAYS
+        synonyms:
+          - video_views
+          - video_requests
+          - video_requests_count
+          - video_play_count
+          - video_initiations
+        description: Video_plays represent the number of times a video ad began playing after being delivered to users. This metric should always be aggregated when answering questions, similar to impressions. The values from the video_plays column must be summed, and the aggregation should be performed at the SF_campaign_id + day level to ensure campaign-level and daily accuracy. If queries cover multiple campaigns or days, results should be rolled up by summing across those combinations. Note that video_plays measures the start of video playback, not completion or engagement, and a single user can generate multiple plays if they view the video ad more than once. Always treat video_plays as an additive measure in analyses.
+        expr: VIDEO_PLAYS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '491'
+          - '2301'
+          - '3487'
+      - name: VIDEO_VIEWS
+        synonyms:
+          - video_plays
+          - video_watches
+          - views
+          - video_impressions
+          - video_display_count
+        description: |-
+          "This column represents the number of times a video ad was viewed, as reported by the DSP or platform.
+          A “view” is typically counted when a user watches the ad past a defined threshold (e.g., 2 seconds with audio, or when the ad comes into view on screen), depending on the DSP’s or industry’s measurement standard.
+
+          It is a core video engagement metric, showing how many times users actually started viewing the video (different from impressions, which are simply ad loads).
+
+          How users may refer to it in natural language:
+
+          “video views”
+
+          “views”
+
+          “video starts”
+
+          “how many times the video was watched”
+
+          “number of views”
+
+          “video ad views”
+
+          When to use it in queries:
+
+          If the user asks: “How many views did my campaign get?” → return VIDEO_VIEWS.
+
+          If the user asks: “What’s the cost per view (CPV)?” → calculate TOTAL_MEDIA_COST ÷ VIDEO_VIEWS.
+
+          If the user asks: “Compare views across suppliers / DSPs / platforms” → group by SUPPLIER_NAME and sum VIDEO_VIEWS.
+
+          If the user asks: “Show video engagement funnel” → compare VIDEO_VIEWS with VIDEO_COMPLETION_25, VIDEO_COMPLETION_50, VIDEO_COMPLETION_100.
+
+          Agent guidance:
+
+          Treat VIDEO_VIEWS as the starting point for video engagement analysis.
+
+          Map natural phrases like “views”, “video starts”, “number of views” to this column.
+
+          Use it to calculate derived KPIs:
+
+          CPV (Cost per View) → total_media_cost / video_views
+
+          View Rate → video_views ÷ impressions
+
+          Do not confuse with completions (25%, 50%, 75%, 100%) — VIDEO_VIEWS counts the initial view threshold, while completion metrics track depth of engagement."
+        expr: VIDEO_VIEWS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '175054'
+          - '193328'
+          - '98'
+      - name: VIEWABLE_IMPRESSIONS
+        synonyms:
+          - visible_impressions
+          - viewable_ads
+          - impressions_in_view
+          - visible_ads
+          - ad_views
+          - impressions_rendered
+          - display_impressions
+        description: |-
+          "This column represents the number of impressions that met the industry standard for viewability, as reported by the DSP, ad server, or verification vendor.
+          According to the MRC (Media Rating Council) and IAB standards:
+
+          A display ad counts as viewable if at least 50% of its pixels are in view for ≥ 1 continuous second.
+
+          A video ad counts as viewable if at least 50% of its pixels are in view for ≥ 2 continuous seconds.
+
+          VIEWABLE_IMPRESSIONS is therefore a subset of total IMPRESSIONS, focusing only on those that had a realistic chance of being seen by a user.
+
+          How users may refer to it in natural language:
+
+          “viewable impressions”
+
+          “in-view impressions”
+
+          “ads that were viewable”
+
+          “seen impressions”
+
+          “measurable impressions that counted as viewable”
+
+          When to use it in queries:
+
+          If the user asks: “How many ads were actually viewable?” → return VIEWABLE_IMPRESSIONS.
+
+          If the user asks: “What’s the viewability rate?” → calculate VIEWABLE_IMPRESSIONS ÷ IMPRESSIONS.
+
+          If the user asks: “Compare viewable delivery across DSPs” → group by DATASOURCE and sum VIEWABLE_IMPRESSIONS.
+
+          If the user asks: “What’s the cost per viewable impression (vCPM)?” → calculate (TOTAL_MEDIA_COST ÷ VIEWABLE_IMPRESSIONS) × 1000.
+
+          Agent guidance:
+
+          Treat VIEWABLE_IMPRESSIONS as the quality subset of IMPRESSIONS that passed viewability standards.
+
+          Always map user terms like “ads seen” or “viewable delivery” to this column.
+
+          Use alongside IMPRESSIONS for calculating viewability rate (percent in view).
+
+          Use alongside spend (TOTAL_MEDIA_COST) to calculate vCPM (cost per 1,000 viewable impressions).
+
+          Clarify when needed: not all impressions are measurable, and different DSPs/vendors may apply slightly different methodologies."
+        expr: VIEWABLE_IMPRESSIONS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '5'
+          - '25'
+          - '74680'
+      - name: VT_CONVERSIONS
+        synonyms:
+          - view_through_conversions
+          - view_through_actions
+          - post_view_conversions
+          - post_view_actions
+          - view_based_conversions
+        description: The total number of conversions (e.g. sales, leads, sign-ups) generated by an advertiser's ad campaigns.
+        expr: VT_CONVERSIONS
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '133'
+          - '3'
+verified_queries:
+  - name: 'give me the list of advetiser having ATV campaigns '
+    question: 'Give me the list of advetiser having ATV campaigns '
+    sql: |-
+      SELECT
+        DISTINCT sf_advertiser
+      FROM
+        e_nexus_advertisers
+      WHERE
+        LOWER(product_code) LIKE '%connected tv%'
+        OR LOWER(product_code) LIKE '%advanced tv%'
+      ORDER BY
+        sf_advertiser
+    use_as_onboarding_question: false
+    verified_by: JAYAKUMAR
+    verified_at: 1758203864
